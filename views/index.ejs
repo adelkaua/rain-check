@@ -1,0 +1,23 @@
+<%- include('partials/header', { title: title }) %>
+
+<section class="hero">
+  <h1>Will it rain tomorrow?</h1>
+  <p>Enter a city and get a clear answer plus a 7-day forecast.</p>
+
+  <% if (error) { %>
+    <div class="alert alert-error" role="alert"><%= error %></div>
+  <% } %>
+
+  <form action="/search" method="POST" class="search-form" novalidate>
+    <label for="city">City name</label>
+    <div class="row">
+      <input type="text" id="city" name="city" value="<%= city %>"
+             placeholder="e.g. London" maxlength="60" required autofocus
+             aria-describedby="city-help">
+      <button type="submit">Check forecast</button>
+    </div>
+    <small id="city-help">2–60 letters. Spaces and hyphens are allowed (e.g. "New York").</small>
+  </form>
+</section>
+
+<%- include('partials/footer') %>

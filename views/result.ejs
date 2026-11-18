@@ -1,0 +1,80 @@
+<%- include('partials/header', { title: title }) %>
+
+<% if (noResults) { %>
+  <section class="hero">
+    <h1>No results found</h1>
+    <p>We couldn't find a city called <strong>"<%= city %>"</strong>. Check the spelling or try another name.</p>
+    <a class="btn" href="/">Try again</a>
+  </section>
+<% } else { %>
+
+  <section class="place">
+    <h1><%= place.name %></h1>
+    <p class="muted">
+      <%= [place.admin1, place.country].filter(Boolean).join(', ') %>
+    </p>
+  </section>
+
+  <% if (matches.length > 1) { %>
+    <section class="matches">
+      <p>Several places match "<%= city %>". Choose another:</p>
+      <ul class="chips">
+        <% matches.forEach((m, i) => { %>
+          <li>
+            <a class="chip <%= i === pick ? 'active' : '' %>"
+               href="/forecast?city=<%= encodeURIComponent(city) %>&pick=<%= i %>">
+              <%= m.name %><%= m.admin1 ? ', ' + m.admin1 : '' %><%= m.country_code ? ' (' + m.country_code + ')' : '' %>
+            </a>
+          </li>
+        <% }) %>
+      </ul>
+    </section>
+  <% } %>
+
+  <% if (tomorrow) { %>
+    <section class="answer answer-<%= tomorrow.verdict %>">
+      <p class="answer-label">Tomorrow, <%= tomorrow.label %></p>
+      <h2><%= tomorrow.verdictText %></h2>
+      <p><%= tomorrow.icon %> <%= tomorrow.weatherText %> · Rain chance <%= tomorrow.probability %>% · <%= tomorrow.precipitation %> mm</p>
+    </section>
+  <% } %>
+
+  <section class="cards summary">
+    <div class="card">
+      <span class="card-value"><%= summary.rainyDays %></span>
+      <span class="card-label">rainy days this week</span>
+    </div>
+    <div class="card">
+      <span class="card-value"><%= summary.totalRain %> mm</span>
+      <span class="card-label">total rainfall</span>
+    </div>
+    <div class="card">
+      <% if (summary.wettest) { %>
+        <span class="card-value"><%= summary.wettest.label %></span>
+        <span class="card-label">wettest day (<%= summary.wettest.precipitation %> mm)</span>
+      <% } else { %>
+        <span class="card-value">None</span>
+        <span class="card-label">no rain expected this week</span>
+      <% } %>
+    </div>
+  </section>
+
+  <h2>7-day forecast</h2>
+  <section class="cards days">
+    <% days.forEach((d, i) => { %>
+      <article class="card day day-<%= d.verdict %>">
+        <h3><%= i === 0 ? 'Today' : (i === 1 ? 'Tomorrow' : d.label) %></h3>
+        <p class="muted"><%= d.label %></p>
+        <p class="icon"><%= d.icon %></p>
+        <p><%= d.weatherText %></p>
+        <p class="temp"><%= d.tempMax %>° <span class="muted"><%= d.tempMin %>°</span></p>
+        <p>💧 <%= d.probability %>% · <%= d.precipitation %> mm</p>
+        <p>💨 <%= d.wind %> km/h</p>
+      </article>
+    <% }) %>
+  </section>
+
+  <p class="center"><a class="btn" href="/">Search another city</a></p>
+<% } %>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,17 @@
+<%- include('partials/header', { title: title }) %>
+
+<section class="hero">
+  <h1>Popular cities</h1>
+  <p>Tap a city to see tomorrow's weather.</p>
+  <% if (cities.length) { %>
+    <ul class="chips center-chips">
+      <% cities.forEach((c) => { %>
+        <li><a class="chip" href="/forecast?city=<%= encodeURIComponent(c) %>"><%= c %></a></li>
+      <% }) %>
+    </ul>
+  <% } else { %>
+    <p>No cities available.</p>
+  <% } %>
+</section>
+
+<%- include('partials/footer') %>
